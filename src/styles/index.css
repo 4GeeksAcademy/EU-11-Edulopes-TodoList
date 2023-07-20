@@ -1,65 +1,63 @@
-#container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 400px;
-    margin-top: 100px;
-    border: 2px inset lightgrey;
-    padding: 10px;
-  }
-  
-  #inputDiv {
-    width: 100%;
-    border-bottom: 1px solid lightgrey;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-  }
-  
-  ul {
-    width: 100%;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  li {
-    position: relative;
-    width: 100%;
-    border-bottom: 1px solid lightgrey;
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  li:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .deleteButton {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    color: grey;
-    font-weight: bold;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  li:hover .deleteButton {
-    opacity: 1;
-  }
-  
-  input {
-    width: 100%;
-    border: 0;
-    padding: 5px;
-  }
-  
-  #todosDiv {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-  
+.todo-container {
+  font-family: Arial, sans-serif;
+  width: 300px;
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.inputDiv {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 5px;
+}
+
+button {
+  margin-left: 5px;
+}
+
+.todosDiv ul {
+  list-style: none;
+  padding: 0;
+}
+
+.todosDiv li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.todosDiv i {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.todosLeft {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #d32f2f;
+}

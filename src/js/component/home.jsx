@@ -1,133 +1,80 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const Home = () => {
-  const [inputValue, setInputValue] = useState("");
   const [todos, setTodos] = useState([]);
-  const [data, setData] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
-  useEffect(() => {
-    // Update the API with the modified to-do list whenever todos change
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/salomon", {
-      method: "POST",
-      body: JSON.stringify([]),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(resp => {
-        console.log(resp.ok); // true if the response is successful
-        console.log(resp.status); // the status code (e.g., 200, 400, etc.)
-        console.log(resp.text()); // the response as text
-        return resp.json(); // parse the response as JSON and return a promise
-      })
-      .then(data => {
-        console.log(data); // the object received from the server
-      })
-      .catch(error => {
-        console.log(error); // error handling
-      });
-  }, []);
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
 
-  useEffect(() => {
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/salomon", {
-      method: "PUT",
-      body: JSON.stringify([{ label: "Make the bed", done: false },
-      { label: "Walk for an hour", done: false },
-      { label: "Do the homework", done: false }]),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(resp => {
-        console.log(resp.ok); // true if the response is successful
-        console.log(resp.status); // the status code (e.g., 200, 400, etc.)
-        console.log(resp.text()); // the response as text
-      })
-      .then(data => {
-        console.log(data); // the object received from the server
-      })
-      .catch(error => {
-        console.log(error); // error handling
-      });
-    // Fetch the initial to-do list from the API
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/salomon")
-      .then(resp => resp.json())
-      .then(data => setTodos(data))
-      .catch(error => console.log(error));
-  }, []);
-
-  const addTodo = () => {
+  const handleAddTask = () => {
     if (inputValue.trim() === "") return;
 
-    // Create a new to-do object and update the todos state
-    const newTodo = { label: inputValue, done: false };
-    setTodos([...todos, newTodo]);
+    const newTask = {
+      id: Date.now(),
+      label: inputValue,
+      done: false,
+    };
 
-    // Clear the input field
+    setTodos([...todos, newTask]);
     setInputValue("");
   };
 
-  const deleteTodo = index => {
-    // Remove the selected to-do from the todos state
-    const updatedTodos = todos.filter((_, currentIndex) => index !== currentIndex);
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleAddTask();
+    }
+  };
+
+  const deleteTodo = (id) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
     setTodos(updatedTodos);
   };
 
-  const cleanAllTasks = () => {
-    // Delete the entire list from the server and update the todos state
-    fetch("https://assets.breatheco.de/apis/fake/todos/user/salo", {
-      method: "DELETE"
-    })
-      .then(resp => resp.json())
-      .then(data => setTodos([]))
-      .catch(error => console.log(error));
+  const clearTasks = () => {
+    setTodos([]);
   };
 
   return (
-    <div>
-      <h1>todos</h1>
-      <div className="container">
-        <div className="row">
-          <div className="col">
-            <ul className="list-group list-group-flush">
-              <li className="list-group-item">
-                <input
-                  type="text"
-                  onChange={(e) => setInputValue(e.target.value)}
-                  value={inputValue}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      addTodo();
-                    }
-                  }}
-                  placeholder="No tasks, add a task"
-                />
-              </li>
-              {todos.map((item, index) => (
-                <li
-                  key={index}
-                  style={{ display: "flex", alignItems: "center" }}
-                  className="list-group-item"
-                >
-                  <span style={{ flexGrow: 1 }}>{item.label}</span>
-                  <i
-                    className="fas fa-times"
-                    onClick={() => deleteTodo(index)}
-                  ></i>
-                </li>
-              ))}
-              <div className="todosLeft">{todos.length} tasks left</div>
-              {todos.length > 0 && (
-                <button className="btn btn-secondary" onClick={cleanAllTasks}>
-                  Clean All Tasks
-                </button>                
-              )}
-            </ul>
-          </div>
-        </div>
+    <div className="todo-container">
+      <h1>To Do List</h1>
+      <div className="inputDiv">
+        <input
+          type="text"
+          onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
+          value={inputValue}
+          placeholder="Add a new task..."
+        />
+        <button onClick={handleAddTask}>Add</button>
       </div>
+      <div className="todosDiv">
+        {todos.length > 0 ? (
+          <ul>
+            {todos.map((todo) => (
+              <li key={todo.id}>
+                <span
+                  style={{ textDecoration: todo.done ? "line-through" : "none" }}
+                >
+                  {todo.label}
+                </span>
+                <i className="fas fa-times" onClick={() => deleteTodo(todo.id)}></i>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No tasks yet.</p>
+        )}
+      </div>
+      {todos.length > 0 && (
+        <div className="todosLeft">
+          {todos.length} tasks remaining
+          <button onClick={clearTasks}>Clear All</button>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default Home;
